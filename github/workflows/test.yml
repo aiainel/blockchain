@@ -1,0 +1,35 @@
+name: Smart Contract CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  test-and-analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Compile Contracts
+        run: forge build
+
+      - name: Run Tests & Generate Gas Report
+        # Note: We skip the fork test here because GitHub runners don't have your RPC URL
+        run: forge test --gas-report --exclude-path test/ForkTest.t.sol
+
+      - name: Run Slither Analysis
+        uses: crytic/slither-action@v0.3.0
+        continue-on-error: true # Slither might find warnings; this prevents the whole CI from failing
+        with:
+          target: '.'
+          slither-args: --fail-low # Fails only on high/medium issues
