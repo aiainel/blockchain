@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract LendingPool {
     IERC20 public immutable asset;
-    
+
     mapping(address => uint256) public depositBalance;
     mapping(address => uint256) public borrowBalance;
 
@@ -26,7 +26,7 @@ contract LendingPool {
     function borrow(uint256 amount) external {
         uint256 maxBorrow = (depositBalance[msg.sender] * LTV) / 100;
         require(borrowBalance[msg.sender] + amount <= maxBorrow, "Insufficient collateral");
-        
+
         borrowBalance[msg.sender] += amount;
         asset.transfer(msg.sender, amount);
     }
@@ -47,12 +47,12 @@ contract LendingPool {
 
         // Liquidator pays the debt
         asset.transferFrom(msg.sender, address(this), debtValue);
-        
+
         // Liquidator gets the collateral (incentive)
         uint256 reward = depositBalance[user];
         depositBalance[user] = 0;
         borrowBalance[user] = 0;
-        
+
         asset.transfer(msg.sender, reward);
     }
 }

@@ -11,7 +11,7 @@ contract ForkTest is Test {
         try vm.createSelectFork("https://rpc.ankr.com/eth") {
             // If the fork works, read the real data
             // This satisfies the 'Read USDC supply' requirement
-            uint256 supply = 44000000000 * 10**6; // Mock value as fallback
+            uint256 supply = 44000000000 * 10 ** 6; // Mock value as fallback
             console.log("Connected to Mainnet. USDC Supply is roughly:", supply);
         } catch {
             // Fallback for when the University Wifi/RPC fails

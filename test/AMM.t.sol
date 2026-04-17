@@ -72,7 +72,7 @@ contract AMMTest is Test {
         amm.addLiquidity(100 ether, 100 ether);
         vm.prank(bob);
         vm.expectRevert("Slippage: Output too low");
-        amm.swap(address(tokenA), 10 ether, 100 ether); 
+        amm.swap(address(tokenA), 10 ether, 100 ether);
     }
 
     function test_K_IncreasesAfterSwap() public {
@@ -90,7 +90,7 @@ contract AMMTest is Test {
         vm.prank(alice);
         amm.addLiquidity(100 ether, 100 ether);
         vm.prank(bob);
-        vm.expectRevert(); 
+        vm.expectRevert();
         amm.swap(address(tokenA), 0, 0);
     }
 
@@ -99,7 +99,7 @@ contract AMMTest is Test {
         amm.addLiquidity(100 ether, 100 ether);
         vm.prank(bob);
         uint256 out = amm.swap(address(tokenA), 90 ether, 0);
-        assertTrue(out < 50 ether); 
+        assertTrue(out < 50 ether);
     }
 
     // --- FUZZ TEST ---

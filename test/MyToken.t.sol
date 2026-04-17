@@ -65,7 +65,7 @@ contract MyTokenTest is Test {
     function test_RevertWhen_InsufficientBalance() public {
         token.mint(alice, 50);
         vm.prank(alice);
-        vm.expectRevert(); 
+        vm.expectRevert();
         token.transfer(bob, 100);
     }
 
@@ -86,7 +86,7 @@ contract MyTokenTest is Test {
     // --- FUZZ TESTING (Requirement: Task 1.10) [cite: 10] ---
 
     function testFuzz_Transfer(uint256 amount) public {
-        vm.assume(amount < type(uint128).max); 
+        vm.assume(amount < type(uint128).max);
         token.mint(alice, amount);
         vm.prank(alice);
         token.transfer(bob, amount);

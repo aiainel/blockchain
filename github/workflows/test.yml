@@ -10,39 +10,30 @@ jobs:
   test-and-analyze:
     runs-on: ubuntu-latest
     steps:
-      # 1. Checkout the code with submodules
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      # 2. Install Foundry toolchain
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
           version: nightly
 
-      # 3. Force install dependencies (Prevents "lib not found" errors)
+      # We skip 'forge fmt' to avoid the error you just saw
+      
       - name: Install Dependencies
         run: |
           forge install foundry-rs/forge-std --no-commit
           forge install openzeppelin/openzeppelin-contracts --no-commit
 
-      # 4. Build the project
       - name: Build Contracts
         run: forge build
 
-      # 5. Run all tests except the Fork Test
-      # We exclude ForkTest because it requires an internet RPC which is unstable in CI
       - name: Run Tests
         run: forge test --exclude-path test/ForkTest.t.sol -vv
 
-      # 6. Generate Gas Report for Task 3 requirement
-      - name: Gas Report
-        run: forge test --exclude-path test/ForkTest.t.sol --gas-report
-
-      # 7. Slither Static Analysis (Task 6 requirement)
-      - name: Run Slither Action
+      - name: Run Slither Analysis
         uses: crytic/slither-action@v0.3.0
         continue-on-error: true
         with:

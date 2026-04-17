@@ -20,7 +20,7 @@ contract LendingPoolTest is Test {
 
         vm.prank(alice);
         token.approve(address(pool), type(uint256).max);
-        
+
         vm.prank(liquidator);
         token.approve(address(pool), type(uint256).max);
     }
@@ -39,19 +39,19 @@ contract LendingPoolTest is Test {
         // 1. Alice deposits and borrows max
         vm.startPrank(alice);
         pool.deposit(100 ether);
-        pool.borrow(75 ether); 
+        pool.borrow(75 ether);
         vm.stopPrank();
 
         // 2. We simulate a "Price Drop" or bad health by forcing state
-        // In a real app, the collateral value would drop. 
-        // Here we simulate it by increasing Alice's debt via a mock update 
+        // In a real app, the collateral value would drop.
+        // Here we simulate it by increasing Alice's debt via a mock update
         // or just testing the function logic.
-        
+
         // For the assignment, we can "etch" or use a helper to make her underwater
         // Or simply demonstrate a successful liquidation when debt > 80%
-        
+
         vm.prank(liquidator);
         // This will fail if health is okay, pass if underwater
-        // pool.liquidate(alice); 
+        // pool.liquidate(alice);
     }
 }

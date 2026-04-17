@@ -22,8 +22,8 @@ contract AMM {
         lpToken = new LPToken();
     }
 
-    // Task Requirement: Implement getAmountOut using x * y = k 
-    // Includes 0.3% fee 
+    // Task Requirement: Implement getAmountOut using x * y = k
+    // Includes 0.3% fee
     function getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut) public pure returns (uint256) {
         uint256 amountInWithFee = amountIn * 997; // 0.3% fee deducted
         uint256 numerator = amountInWithFee * reserveOut;
@@ -31,7 +31,7 @@ contract AMM {
         return numerator / denominator;
     }
 
-    // Task Requirement: addLiquidity() 
+    // Task Requirement: addLiquidity()
     function addLiquidity(uint256 amountA, uint256 amountB) external returns (uint256 shares) {
         tokenA.transferFrom(msg.sender, address(this), amountA);
         tokenB.transferFrom(msg.sender, address(this), amountB);
@@ -54,29 +54,28 @@ contract AMM {
     // Task Requirement: swap() with slippage protection [cite: 36, 39]
     function swap(address tokenIn, uint256 amountIn, uint256 minAmountOut) external returns (uint256 amountOut) {
         bool isTokenA = tokenIn == address(tokenA);
-        (IERC20 tIn, IERC20 tOut, uint256 rIn, uint256 rOut) = isTokenA 
-            ? (tokenA, tokenB, reserveA, reserveB) 
-            : (tokenB, tokenA, reserveB, reserveA);
+        (IERC20 tIn, IERC20 tOut, uint256 rIn, uint256 rOut) =
+            isTokenA ? (tokenA, tokenB, reserveA, reserveB) : (tokenB, tokenA, reserveB, reserveA);
 
         tIn.transferFrom(msg.sender, address(this), amountIn);
         amountOut = getAmountOut(amountIn, rIn, rOut);
-        
-        // Slippage check 
+
+        // Slippage check
         require(amountOut >= minAmountOut, "Slippage: Output too low");
 
         tOut.transfer(msg.sender, amountOut);
-        
+
         reserveA = tokenA.balanceOf(address(this));
         reserveB = tokenB.balanceOf(address(this));
-        
+
         emit Swap(msg.sender, tokenIn, amountIn, amountOut);
     }
 
     // Helper functions
-    function _sqrt(uint y) internal pure returns (uint z) {
+    function _sqrt(uint256 y) internal pure returns (uint256 z) {
         if (y > 3) {
             z = y;
-            uint x = y / 2 + 1;
+            uint256 x = y / 2 + 1;
             while (x < z) {
                 z = x;
                 x = (y / x + x) / 2;
@@ -86,7 +85,7 @@ contract AMM {
         }
     }
 
-    function _min(uint x, uint y) internal pure returns (uint) {
+    function _min(uint256 x, uint256 y) internal pure returns (uint256) {
         return x <= y ? x : y;
     }
 }
